@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Logo Master</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#080b12;
+color:white;
+text-align:center;
+}
+header{
+padding:24px 10px;
+background:linear-gradient(135deg,#171c28,#080b12);
+border-bottom:2px solid #d5a83e;
+}
+h1{color:#e8b94e;margin:8px}
+.tag{color:#aaa;font-size:13px}
+.card{
+margin:22px auto;
+padding:24px;
+width:90%;
+max-width:450px;
+background:#151b27;
+border:1px solid #b88b35;
+border-radius:18px;
+}
+.stats{
+display:flex;
+justify-content:space-around;
+color:#f5c451;
+margin:15px;
+}
+.logo{
+height:170px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:85px;
+background:#0a0e17;
+border-radius:14px;
+margin:20px 0;
+}
+button{
+width:100%;
+padding:15px;
+margin:7px 0;
+border-radius:10px;
+border:1px solid #c69a40;
+background:#202a3a;
+color:white;
+font-size:16px;
+font-weight:bold;
+}
+button:active{background:#bd9139}
+#message{color:#f3c45a;min-height:24px}
+#next{display:none;background:#b78a32;color:#080b12}
+</style>
+</head>
+<body>
+<header>
+<h1>🏎️ CAR LOGO MASTER</h1>
+<div class="tag">THE ULTIMATE AUTOMOTIVE QUIZ</div>
+</header>
+<div class="stats">
+<span>⭐ Score: <b id="score">0</b></span>
+<span>🏆 Level: <b id="level">1</b></span>
+<span>🚗 <b id="count">1</b>/100</span>
+</div>
+<div class="card">
+<h2>GUESS THE CAR BRAND</h2>
+<div class="logo" id="logo">⭐</div>
+<h3 id="question">Which brand owns this logo?</h3>
+<div id="answers"></div>
+<p id="message"></p>
+<button id="next" onclick="nextQuestion()">NEXT QUESTION ➜</button>
+</div>
+<script>
+const cars=[
+["Mercedes-Benz","Mercedes-Benz","BMW","Audi","Toyota","⭐"],
+["BMW","BMW","Audi","Honda","Ford","🔵"],
+["Audi","Audi","Volkswagen","BMW","Volvo","⭕"],
+["Toyota","Toyota","Honda","Nissan","Hyundai","🚙"],
+["Ferrari","Ferrari","Lamborghini","Porsche","McLaren","🐎"],
+["Lamborghini","Lamborghini","Ferrari","Bugatti","Bentley","🐂"],
+["Porsche","Porsche","BMW","Audi","Jaguar","🏎️"],
+["Ford","Ford","Chevrolet","Dodge","Jeep","🔵"],
+["Honda","Honda","Toyota","Nissan","Mazda","🚗"],
+["Tesla","Tesla","Lucid","Rivian","Polestar","⚡"],
+["Volkswagen","Volkswagen","Skoda","Seat","Opel","🚘"],
+["Hyundai","Hyundai","Kia","Honda","Suzuki","🚙"],
+["Kia","Kia","Hyundai","Toyota","Mazda","🚗"],
+["Nissan","Nissan","Toyota","Honda","Mitsubishi","🚘"],
+["Jaguar","Jaguar","Bentley","Rolls-Royce","Aston Martin","🐆"],
+["Rolls-Royce","Rolls-Royce","Bentley","Maybach","Jaguar","👑"],
+["Bentley","Bentley","Rolls-Royce","Aston Martin","Jaguar","B"],
+["Bugatti","Bugatti","Ferrari","McLaren","Pagani","🐎"],
+["McLaren","McLaren","Ferrari","Porsche","Lotus","🏎️"],
+["Volvo","Volvo","Saab","Audi","BMW","🔰"]
+];
+let index=0,score=0,answered=false;
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function showQuestion(){
+answered=false;
+let car=cars[index%cars.length];
+document.getElementById("logo").textContent=car[5];
+document.getElementById("question").textContent="Which brand owns this logo?";
+document.getElementById("score").textContent=score;
+document.getElementById("level").textContent=Math.floor(index/10)+1;
+document.getElementById("count").textContent=index+1;
+document.getElementById("message").textContent="";
+document.getElementById("next").style.display="none";
+let options=shuffle(car.slice(1,5));
+document.getElementById("answers").innerHTML="";
+options.forEach(option=>{
+let btn=document.createElement("button");
+btn.textContent=option;
+btn.onclick=()=>checkAnswer(option,car[0]);
+document.getElementById("answers").appendChild(btn);
+});
+}
+function checkAnswer(choice,correct){
+if(answered)return;
+answered=true;
+if(choice===correct){
+score+=10;
+document.getElementById("message").textContent="✅ CORRECT! +10 POINTS";
+}else{
+document.getElementById("message").textContent="❌ WRONG! Answer: "+correct;
+}
+document.getElementById("score").textContent=score;
+document.querySelectorAll("#answers button").forEach(b=>b.disabled=true);
+document.getElementById("next").style.display="block";
+}
+function nextQuestion(){
+if(index===99){
+document.querySelector(".card").innerHTML="<h2>🏆 GAME COMPLETED!</h2><h1>Score: "+score+"</h1><button onclick='location.reload()'>PLAY AGAIN</button>";
+return;
+}
+index++;
+showQuestion();
+}
+showQuestion();
+</script>
+</body>
+</html>
